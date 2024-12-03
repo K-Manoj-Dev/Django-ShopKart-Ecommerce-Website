@@ -1,0 +1,54 @@
+{% extends "shop/layouts/main.html" %} 
+
+{% block title %} 
+   Cart | ShopKart
+{% endblock title %} 
+
+{% block content %}
+<section class="bg-light py-4 my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mb-3">Cart Items</h4>
+                <hr style="border-color:#b8bfc2;">
+            </div>    
+           <table class="">
+            <tr class="border text-center">
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Unit</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+                <th>Remove</th>
+            </tr>
+            {% for item in cart %}
+              <tr class="border text-center">
+                <td><img class="cart-image"  src="{{item.product.product_image.url}}" alt="{{item.product.product_name}}"></td>
+                <td>{{item.product.name}}</td>
+                <td>{{item.product.selling_price | stringformat:'d'}}</td>
+                <td>{{item.product_qty}}</td>
+                <td id="amt">{{item.total_cost | stringformat:'d'}}</td>
+                <td><a href="{% url 'remove_cart' item.id %}" onclick="return confirm('Are you sure? to Remove')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Remove</a></td>
+              </tr>
+           {% endfor %}
+           <tr class="border">
+            <td></td>
+            <td></td>
+            <td colspan="2">Total Amount</td>
+            <td id="net">0</td>
+           </tr>
+           </table>
+        </div>
+    </div>
+</section>
+
+<script>
+    const nodes = document.querySelectorAll('.amt');
+    const arr = Array.from(nodes);
+    const res = arr.reduce((acc, curr) => {
+        return acc += Number(curr.textContent)
+    }, 0);
+    document.getElementById("net").innerHTML="Rs : "+ res;
+</script>
+
+{% endblock content %}
